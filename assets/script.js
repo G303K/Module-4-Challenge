@@ -148,6 +148,8 @@ function showScore() {
   nextButton.innerHTML = "Play again?";
   nextButton.style.display = "block";
 }
+
+
 // Function to update the scoreboard
 function updateScoreboard(scores) {
   // Sort the scores array in descending order based on the score
@@ -192,3 +194,28 @@ nextButton.addEventListener("click", () => {
 // Start the quiz and update the scoreboard
 startQuiz();
 updateScoreboard(JSON.parse(localStorage.getItem("scores")) || []);
+
+// Get the timer element
+const timerElement = document.getElementById("timer");
+
+// Set the initial time in seconds
+let timeLeft = 100;
+
+const timerInterval = setInterval(() => {
+  // Display the remaining time
+  timerElement.textContent = timeLeft;
+
+  // Decrease the time by 1 second
+  timeLeft--;
+
+  // If the timer reaches 0, stops the user and directs them to input their initials
+  if (timeLeft < 0) {
+    clearInterval(timerInterval);
+    timerElement.textContent = "Time's up!";
+    showScore(); // Call the showScore function
+  }
+}, 1000);
+
+
+
+
