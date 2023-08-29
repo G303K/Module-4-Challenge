@@ -1,3 +1,4 @@
+// Array of questions and their answers
 const questions = [
   {
     question: "Commonly used data types do NOT include:",
@@ -48,29 +49,34 @@ const questions = [
   },
 ];
 
+// Selecting HTML elements for actions
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
 
+// Variables to keep track of the quiz
 let currentQuestionIndex = 0;
 let score = 0;
 
-function startquiz() {
+// Function to start the quiz
+function startQuiz() {
   currentQuestionIndex = 0;
   score = 0;
   nextButton.innerHTML = "Next";
   showQuestion();
 }
 
+// Function displaying the current question
 function showQuestion() {
   resetState();
-  let currentQuestion = questions[currentQuestionIndex];
-  let questionNo = currentQuestionIndex + 1;
-  questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+  const currentQuestion = questions[currentQuestionIndex];
+  const questionNo = currentQuestionIndex + 1;
+  questionElement.innerHTML = `${questionNo}. ${currentQuestion.question}`;
 
+  // Creating answer buttons and setting up event listeners
   currentQuestion.answers.forEach((answer) => {
     const button = document.createElement("button");
-    button.innerHTML = answer.text;
+    button.innerText = answer.text;
     button.classList.add("btn");
     answerButtons.appendChild(button);
     if (answer.correct) {
@@ -80,6 +86,7 @@ function showQuestion() {
   });
 }
 
+// Function to reset the interface
 function resetState() {
   nextButton.style.display = "none";
   while (answerButtons.firstChild) {
@@ -87,14 +94,15 @@ function resetState() {
   }
 }
 
+// Function to handle answer selection
 function selectAnswer(e) {
-  const selectedBtn = e.target;
-  const isCorrect = selectedBtn.dataset.correct === "true";
+  const selectedButton = e.target;
+  const isCorrect = selectedButton.dataset.correct === "true";
   if (isCorrect) {
-    selectedBtn.classList.add("correct");
+    selectedButton.classList.add("correct");
     score++;
   } else {
-    selectedBtn.classList.add("incorrect");
+    selectedButton.classList.add("incorrect");
   }
   Array.from(answerButtons.children).forEach((button) => {
     if (button.dataset.correct === "true") {
@@ -105,64 +113,34 @@ function selectAnswer(e) {
   nextButton.style.display = "block";
 }
 
+// Function to display the final score and submit it to the scoreboard
 function showScore() {
   resetState();
 
-  // Create an input field for initials
-  const initialsInput = document.createElement("input");
-  initialsInput.type = "text";
-  initialsInput.placeholder = "Enter your initials";
-  
-  // Create a button to submit the initials and store the score
-  const submitButton = document.createElement("button");
-  submitButton.innerText = "Submit";
-  submitButton.addEventListener("click", function() {
-    const initials = initialsInput.value;
-    if (initials) {
-      // Store the score and initials in a database or storage
-      // For example: You can use localStorage or send it to a server
-      
-      // Reset the input field after submission
-      initialsInput.value = "";
-      // Hide the input field and submit button after submission
-      initialsInput.style.display = "none";
-      submitButton.style.display = "none";
-      
-      // Update the message to show successful submission
-      questionElement.innerHTML = `Score submitted successfully!`;
-    }
-  });
-
-  function showScore() {
-  resetState();
-
+  // Create input box for user initials and submit button
   const initialsInput = document.createElement("input");
   initialsInput.type = "text";
   initialsInput.placeholder = "Enter your initials";
 
   const submitButton = document.createElement("button");
   submitButton.innerText = "Submit";
-  submitButton.addEventListener("click", function() {
+  submitButton.addEventListener("click", function () {
     const initials = initialsInput.value;
     if (initials) {
-      // Retrieve existing scores from local storage or initialize an empty array
+      // Save score to local storage
       const savedScores = JSON.parse(localStorage.getItem("scores")) || [];
       savedScores.push({ initials, score });
-
-      // Save the updated scores to local storage
       localStorage.setItem("scores", JSON.stringify(savedScores));
-
+      // Hide input and submit button after submission
       initialsInput.value = "";
       initialsInput.style.display = "none";
       submitButton.style.display = "none";
 
       questionElement.innerHTML = `Score submitted successfully!`;
-
-      // Update the scoreboard display
       updateScoreboard(savedScores);
     }
   });
-
+  // Display user's score
   questionElement.innerHTML = `You scored ${score} out of ${questions.length}!<br>`;
   questionElement.appendChild(initialsInput);
   questionElement.appendChild(submitButton);
@@ -170,11 +148,14 @@ function showScore() {
   nextButton.innerHTML = "Play again?";
   nextButton.style.display = "block";
 }
-
+// Function to update the scoreboard
 function updateScoreboard(scores) {
+  // Sort the scores array in descending order based on the score
+  scores.sort((a, b) => b.score - a.score);
+
   const scoreboardElement = document.createElement("div");
   scoreboardElement.innerHTML = "<h2>Scoreboard</h2>";
-  
+
   if (scores.length === 0) {
     scoreboardElement.innerHTML += "No scores yet.";
   } else {
@@ -182,8 +163,7 @@ function updateScoreboard(scores) {
       scoreboardElement.innerHTML += `<p>${entry.initials}: ${entry.score}</p>`;
     }
   }
-  
-  // Replace the previous scoreboard with the updated one
+  // Update and display the new scoreboard
   const oldScoreboard = document.getElementById("scoreboard");
   if (oldScoreboard) {
     oldScoreboard.parentNode.removeChild(oldScoreboard);
@@ -192,21 +172,7 @@ function updateScoreboard(scores) {
   document.body.appendChild(scoreboardElement);
 }
 
-// Call this function to initially load the scoreboard from local storage
-updateScoreboard(JSON.parse(localStorage.getItem("scores")) || []);
-
-
-  // Add the input field and submit button to the questionElement
-  questionElement.innerHTML = `You scored ${score} out of ${questions.length}!<br>`;
-  questionElement.appendChild(initialsInput);
-  questionElement.appendChild(submitButton);
-
-  // Update the nextButton
-  nextButton.innerHTML = "Play again?";
-  nextButton.style.display = "block";
-}
-
-
+// Function to handle the "Next" button
 function handleNextButton() {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
@@ -215,14 +181,14 @@ function handleNextButton() {
     showScore();
   }
 }
-
+// Event listener for the "Next" button
 nextButton.addEventListener("click", () => {
   if (currentQuestionIndex < questions.length) {
     handleNextButton();
   } else {
-    startquiz();
+    startQuiz();
   }
 });
-
-startquiz();
-
+// Start the quiz and update the scoreboard
+startQuiz();
+updateScoreboard(JSON.parse(localStorage.getItem("scores")) || []);
