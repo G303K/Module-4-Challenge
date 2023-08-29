@@ -23,8 +23,15 @@ This application is a homework assignment for the MSU Coding Bootcamp.
 In this challange we were tasked with creating a quiz for a user to complete and submit their score.
 
 The quiz is a timed multiple-choice quiz about programming knowledge learned thoughout the course so far.
-User's will begin a timed, multiple choice 5-question quiz.
+
+User's will begin a timed multiple choice 5-question quiz with a 10-second time penalty for wrong answers.
+
 At the end of the quiz, users can submit their initials and apply it to a scoreboard. 
+
+## Deployed application
+- (Link for the deployed application)
+
+
 
 ## Installation
 

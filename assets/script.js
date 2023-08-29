@@ -98,18 +98,23 @@ function resetState() {
 function selectAnswer(e) {
   const selectedButton = e.target;
   const isCorrect = selectedButton.dataset.correct === "true";
+
   if (isCorrect) {
     selectedButton.classList.add("correct");
     score++;
   } else {
     selectedButton.classList.add("incorrect");
+    // Deduct 10 seconds from the timer for incorrect answers
+    timeLeft -= 10;
   }
+
   Array.from(answerButtons.children).forEach((button) => {
     if (button.dataset.correct === "true") {
       button.classList.add("correct");
     }
     button.disabled = true;
   });
+
   nextButton.style.display = "block";
 }
 
@@ -148,7 +153,6 @@ function showScore() {
   nextButton.innerHTML = "Play again?";
   nextButton.style.display = "block";
 }
-
 
 // Function to update the scoreboard
 function updateScoreboard(scores) {
@@ -212,10 +216,7 @@ const timerInterval = setInterval(() => {
   if (timeLeft < 0) {
     clearInterval(timerInterval);
     timerElement.textContent = "Time's up!";
+    timeLeft = 0;
     showScore(); // Call the showScore function
   }
 }, 1000);
-
-
-
-
