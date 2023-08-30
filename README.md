@@ -29,7 +29,7 @@ User's will begin a timed multiple choice 5-question quiz with a 10-second time 
 At the end of the quiz, users can submit their initials and apply it to a scoreboard. 
 
 ## Deployed application
-- (Link for the deployed application)
+- https://g303k.github.io/Module-4-Challenge/
 
 
 
